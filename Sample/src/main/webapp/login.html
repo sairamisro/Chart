@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>chart</title>
+</head>
+<html lang="en">
+<head>
+<title>Charting</title>
+<meta http-equiv="content-type" content="text-html; charset=utf-8" />
+<script type="text/javascript" src="jscharting.js"></script>
+<style></style>
+</head>
+<body>
+
+
+	<div id="chartDiv1" class="chartDiv"
+		style="max-width: 700px; height: 400px;"></div>
+
+
+	<script type="text/javascript">
+	
+	var points = [];
+	function func() {
+
+		$.ajax({
+
+			type : 'POST',
+			data : {
+				"username" : "a",
+				"password" : "a"
+			},
+			url : 'http://localhost:8081/Sample/login',
+			success : function(data) {
+				var datalist = data;
+				console.log("Success :" + JSON.stringify(datalist));
+				
+				for(let i=0;i<datalist.length;i++){
+					console.log(i +" :" + JSON.stringify(datalist[i]));
+					//{"parent":"excavation","name":"Grading","y1":"06/15/2022","y2":"09/13/2022","id":"grading"}
+					points.push({
+						name : datalist[i].name,
+						y : [ datalist[i].y1, datalist[i].y2 ],
+						id : datalist[i].id,
+						parent : datalist[i].parent
+					});
+				}
+				console.log("list :" + JSON.stringify(points));	
+				
+				/* [ {
+					name : 'Suppyorder2',
+					y : [ '08/11/2015', '12/31/2021' ],
+					id : 'septic',
+					parent : 'site_prep'
+				} ] */
+				//[{"name":"Grading","y":["06/15/2022","09/13/2022"],"id":"grading","parent":"excavation"}]
+				 
+				//-------------------------------------------------------------------
+				
+				var columnWidths = [ 80, 30 ], span = function(val, width) {
+			return '<span style="width:' + width + 'px;">' + val + '</span>';
+		}, mapLabels = function(labels) {
+			return labels.map(function(v, i) {
+				return span(v, columnWidths[i]);
+			}).join('');
+		}, tickTemplate = mapLabels([ '%name' ]);
+
+		// The critical path
+		var criticalPath = 'site_prep,power,excavation,foundation,framing,roofing,interior'
+				.split(','), criticalpathStyle = {
+			color : '#d50000',
+			width : 2
+		};
+
+		//var 
+		chart = JSC
+				.chart(
+						'chartDiv1',
+						{
+							title_label_text : 'Floating Test Range from %min to %max',
+							legend_visible : false,
+
+							/*Typical Gantt setup. Horizontal columns by default.*/
+							type : 'horizontal column solid',
+							/*Make columns overlap.*/
+							zAxis_scale_type : 'stacked',
+							/*Time Y Axis.*/
+							yAxis : {
+								scale : {
+									type : 'time',
+									range : {
+										padding : 0
+									}
+								}
+							},
+							xAxis : {
+								spacingPercentage : 0.5
+							},
+							palette : [ '#33658A', '#86BBD8', '#758E4F',
+									'#F6AE2D', '#F26419', '#590925' ],
+							defaultSeries : {
+								defaultPoint : {
+									xAxisTick_label_text : tickTemplate,
+									outline_width : 0,
+									tooltip : '<b>%name</b> <br/>%low - %high<br/>{days(%high-%low)} days'
+								}
+							},
+							series : [ {
+								points : points
+										/* [ {
+												name : 'Suppyorder2',
+												y : [ '08/11/2015', '12/31/2021' ],
+												id : 'septic',
+												parent : 'site_prep'
+											} ] */
+							
+							}, {
+								points : [ {
+									name : 'Suppyorder3',
+									y : [ '05/10/2016', '11/30/2018' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder4',
+									y : [ '05/01/2013', '05/30/2020' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder5',
+									y : [ '09/07/2017', '06/30/2021' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder6',
+									y : [ '10/26/2017', '08/30/2018' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder7',
+									y : [ '03/16/2018', '11/29/2019' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder8',
+									y : [ '03/16/2018', '06/29/2020' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder9',
+									y : [ '03/16/2018', '09/15/2020' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder10',
+									y : [ '04/02/2018', '12/31/2018' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder11',
+									y : [ '08/22/2018', '12/31/2021' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder12',
+									y : [ '08/24/2018', '12/31/2021' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder13',
+									y : [ '12/03/2018', '05/02/2019' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder14',
+									y : [ '12/12/2018', '05/11/2021' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder15',
+									y : [ '12/19/2018', '09/15/2020' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder16',
+									y : [ '01/04/2019', '12/31/2019' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder17',
+									y : [ '01/21/2019', '10/31/2019' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder18',
+									y : [ '02/27/2019', '08/09/2019' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder19',
+									y : [ '09/19/2019', '02/15/2021' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder20',
+									y : [ '01/09/2020', '03/31/2021' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Suppyorder21',
+									y : [ '01/28/2020', '11/30/2021' ],
+									id : 'water',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder22',
+									y : [ '03/03/2020', '06/30/2020' ],
+									id : 'power',
+									parent : 'site_prep'
+								}, {
+									name : 'Suppyorder23',
+									y : [ '07/21/2020', '12/31/2020' ],
+									id : 'data',
+									parent : 'site_prep'
+								} ]
+							}, {
+								points : [ {
+									name : 'Excavation',
+									y : [ '11/27/2020', '11/30/2021' ],
+									id : 'excavation',
+									parent : 'septic,water,power,data'
+								} ]
+							}, {
+								points : [ {
+									name : 'Foundation',
+									y : [ '12/01/2020', '01/31/2022' ],
+									id : 'foundation',
+									parent : 'excavation'
+								},
+
+								{
+									name : 'Windows',
+									y : [ '01/18/2022', '01/31/2022' ],
+									id : 'windows',
+									parent : 'framing'
+								} ]
+							}, {
+								points : [ {
+									name : 'Interior',
+									y : [ '05/02/2022', '06/30/2022' ],
+									id : 'interior',
+									parent : 'windows,roofing'
+								} ]
+							}, {
+								points : [ {
+									name : 'Grading',
+									y : [ '06/15/2022', '09/13/2022' ],
+									id : 'grading',
+									parent : 'excavation'
+								} ]
+							} ],
+							toolbar_items : {
+								'Critical Path' : {
+									type : 'checkbox',
+									value : true,
+									position : 'inside top right',
+									events_change : function(value) {
+										var chart = this.chart;
+										if (value) {
+											chart.connectors(criticalPath,
+													criticalpathStyle);
+										} else {
+											chart.connectors();
+										}
+									}
+								}
+							}
+						}, highlightCriticalPath);
+
+		function highlightCriticalPath(chart) {
+			chart.connectors(criticalPath, criticalpathStyle);
+		}
+		function abc() {
+			window.open("abc.jsp");
+		}
+				
+				
+				
+				//---------------------------------------------------------
+
+			},
+			error : function() {
+				alert("Error");
+			}
+		});
+	}
+	
+		
+		
+		
+		
+	</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+	<div align="center">
+		<a id="name" href="#" onClick="func();">Build</a>
+	</div>
+	</br></br></br></br></br></br>
+</body>
+</html>
